@@ -1,4 +1,4 @@
-package io.github.JoaoFXs.fake_requisitions.model;
+package io.github.joaofxs.fake_requisitions.model;
 
 import java.util.HashMap;
 import java.util.Map;

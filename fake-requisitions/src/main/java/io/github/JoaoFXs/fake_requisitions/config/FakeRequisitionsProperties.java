@@ -1,4 +1,4 @@
-package io.github.JoaoFXs.fake_requisitions.config;
+package io.github.joaofxs.fake_requisitions.config;
 
 
 import lombok.AllArgsConstructor;

@@ -1,7 +1,7 @@
-package io.github.JoaoFXs.fake_requisitions.service;
+package io.github.joaofxs.fake_requisitions.service;
 
 
-import io.github.JoaoFXs.fake_requisitions.config.FakeRequisitionsProperties;
+import io.github.joaofxs.fake_requisitions.config.FakeRequisitionsProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
