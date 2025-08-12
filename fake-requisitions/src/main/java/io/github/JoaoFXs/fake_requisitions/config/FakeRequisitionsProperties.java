@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 import java.util.Locale;
 
@@ -14,7 +15,7 @@ import java.util.Locale;
 @ConfigurationProperties(prefix = "fake.requisitions")
 public class FakeRequisitionsProperties {
 
-    private String urlEnvio;
-    private Locale locale = new Locale("pt-BR");
+    private String url;
+    private Locale locale;
 
 }

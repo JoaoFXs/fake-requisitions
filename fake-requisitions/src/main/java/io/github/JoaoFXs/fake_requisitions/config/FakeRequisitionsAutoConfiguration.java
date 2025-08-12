@@ -1,21 +1,32 @@
 package io.github.joaofxs.fake_requisitions.config;
 
+import com.github.javafaker.Faker;
 import io.github.joaofxs.fake_requisitions.bean.FakeRequisitions;
-import io.github.joaofxs.fake_requisitions.service.SendRequisitions;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
-@EnableConfigurationProperties(io.github.joaofxs.fake_requisitions.config.FakeRequisitionsProperties.class)
+@EnableConfigurationProperties(FakeRequisitionsProperties.class)
 public class FakeRequisitionsAutoConfiguration {
-    @Bean
-    public FakeRequisitions generateRandomFields(io.github.joaofxs.fake_requisitions.config.FakeRequisitionsProperties properties){
-        return new FakeRequisitions(properties);
-    }
 
     @Bean
-    public SendRequisitions sendRequisitions(io.github.joaofxs.fake_requisitions.config.FakeRequisitionsProperties properties){
-        return new SendRequisitions(properties);
+    public Faker faker() {
+        return new Faker();
     }
+
+    // Bean único e principal
+    @Primary
+    @Bean
+    public FakeRequisitions fakeRequisitions(
+            FakeRequisitionsProperties properties,
+            Faker faker
+
+    ) {
+        return new FakeRequisitions(properties, faker, new RestTemplate());
+    }
+
+
 }

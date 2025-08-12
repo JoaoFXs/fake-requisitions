@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-io.github.jfelixy.fake_requisitions.FakeRequisicoesAutoConfiguration
