@@ -8,6 +8,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * Auto-configuração do pacote FakeRequisitions.
+ * Cria os beans Faker e FakeRequisitions automaticamente.
+ */
 @Configuration
 @EnableConfigurationProperties(FakeRequisitionsProperties.class)
 public class FakeRequisitionsAutoConfiguration {
@@ -17,16 +21,10 @@ public class FakeRequisitionsAutoConfiguration {
         return new Faker();
     }
 
-    // Bean único e principal
     @Primary
     @Bean
-    public FakeRequisitions fakeRequisitions(
-            FakeRequisitionsProperties properties,
-            Faker faker
-
-    ) {
+    public FakeRequisitions fakeRequisitions(FakeRequisitionsProperties properties, Faker faker) {
+        // O RestTemplate será usado apenas se a URL estiver configurada.
         return new FakeRequisitions(properties, faker, new RestTemplate());
     }
-
-
 }
