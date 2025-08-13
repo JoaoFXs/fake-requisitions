@@ -1,144 +1,142 @@
+This project's README is also available in [Portuguese](https://github.com/JoaoFXs/fake-requisitions/tree/main/utils/README.md).
 # Fake Requisitions
 
-Biblioteca Java para gerar requisições HTTP com dados falsos (mockados) utilizando [Java Faker](https://github.com/DiUS/java-faker) e enviar para um endpoint configurado via Spring Boot.
+Java library for generating HTTP requests with fake (mock) data using [Java Faker](https://github.com/DiUS/java-faker) and sending them to an endpoint configured via Spring Boot.
 
 ---
 
-## Descrição
+## Description
 
-
-- Gerar múltiplos JSONs com campos dinâmicos baseados em geradores Faker, usando `Supplier<Object>` para flexibilidade total.
-- Enviar essas requisições JSON para uma URL configurada via propriedades do Spring Boot.
-- Facilitar testes e populamento de APIs com dados mockados.
+- Generate multiple JSONs with dynamic fields based on Faker generators, using `Supplier<Object>` for complete flexibility.
+  -- Send these JSON requests to a URL configured via Spring Boot properties.
+  -- Facilitate testing and populating APIs with mocked data.
 
 ---
 
-## Dependências principais
+## Main Dependencies
 
 - Java Faker
 - Gson
 - Spring Web (RestTemplate)
-- Spring Boot Configuration (para propriedades customizadas)
+- Spring Boot Configuration (for custom properties)
 
 ---
 
-## Instalação
+## Installation
 
-Inclua o package no seu projeto (via Maven ou Gradle), ou importe o código diretamente no seu projeto Spring Boot.
+Include the package in your project (via Maven or Gradle), or import the code directly into your Spring Boot project.
 
 ```java
 <dependency>
-  <groupId>io.github.joaofxs</groupId>
-  <artifactId>fake-requisitions</artifactId>
-  <version><!-- Insira a versão aqui --></version>
+<groupId>io.github.joaofxs</groupId>
+<artifactId>fake-requisitions</artifactId>
+<version><!-- Enter version here --></version>
 </dependency>
 ```
 
 ---
 
-## Configuração
+## Configuration
 
-Configure a URL do endpoint que receberá as requisições no arquivo `application.properties` (ou `application.yml`):
+Configure the endpoint URL that will receive requests in the `application.properties` (or `application.yml`) file:
 
 ```properties
 fake.requisitions.url=http://localhost:8080/api/endpoint
 ```
 
-## Uso
+## Usage
 
-A biblioteca permite criar facilmente payloads JSON aleatórios, dinâmicos e escaláveis para serem enviados como requisições HTTP POST.
+The library allows you to easily create random, dynamic, and scalable JSON payloads to be sent as HTTP POST requests.
 
-Exemplo de uso:
+Usage example:
 
 ```java
 @RestController
 @RequestMapping("/template")
 public class ControllerTest {
 
+private final FakeRequisitions fakeRequisitions; 
 
-    private  final FakeRequisitions fakeRequisitions;
-    
-    @Autowired
-    public LaboratorioController(FakeRequisitions fakeRequisitions) {
-        this.fakeRequisitions = fakeRequisitions;
-    }
-    
-    @PostMapping("/generate")
-    private ResponseEntity<List<String>> generateTemplate() throws Exception {
-        Map<String, Supplier<Object>> fields = new HashMap<>();
-        fields.put("name", () -> fakeRequisitions.educator().secondarySchool());
-        fields.put("email", () -> fakeRequisitions.internet().emailAddress());
-        fields.put("registration", () -> fakeRequisitions.number().numberBetween(1000,9999));
-        List<String> jsons = fakeRequisitions.generateJsons(3, fields);
+@Autowired 
+public LaboratorioController(FakeRequisitions fakeRequisitions) { 
+this.fakeRequisitions = fakeRequisitions; 
+} 
 
-        fakeRequisitions.sendRequisition(jsons);
-        return ResponseEntity.created(URI.create("/template")).body(jsons);
-    }
-    
+@PostMapping("/generate") 
+private ResponseEntity<List<String>> generateTemplate() throws Exception { 
+Map<String, Supplier<Object>> fields = new HashMap<>(); 
+fields.put("name", () -> fakeRequisitions.educator().secondarySchool()); 
+fields.put("email", () -> fakeRequisitions.internet().emailAddress()); 
+fields.put("registration", () -> fakeRequisitions.number().numberBetween(1000,9999)); 
+List<String> jsons = fakeRequisitions.generateJsons(3, fields); 
+
+fakeRequisitions.sendRequisition(jsons); 
+return ResponseEntity.created(URI.create("/template")).body(jsons);
+}
+
 }
 
 ```
-### Estrutura do Json Gerado
+### Generated Json Structure
 
-O exemplo acima pode gerar um JSON como:
+The above example can generate a JSON like:
 
 ``` json
 {
-"nome": "Jessica Luiza Pereira",
+"name": "Jessica Luiza Pereira",
 "email": "jessica.luiza94@example.com",
-"idade": 27,
-"cidade": "São Paulo"
+"age": 27,
+"city": "São Paulo"
 }
 ```
 
-## Detalhamento dos principais métodos
+## Details of the main methods
 
 ### 1. generateJsons
-**Assinatura:** `generateJsons(int quantidade, Map<String, Supplier<Object>> campos)`
+**Signature:** `generateJsons(int quantity, Map<String, Supplier<Object>> fields)`
 
-Gera uma lista de JSONs com base nos campos fornecidos e em fornecedores de dados (Supplier<Object>). Ao criar o field, do Map, lembre-se que FakeRequisitions ja extende a biblioteca Faker, então, apenas inclua o array function () ->, junto com o método do Faker.
-- Parâmetros:
-    - quantidade: número de JSONs a serem gerados.
-    - campos: mapa de campos para fornecedores de dados. Cada chave é o nome do campo do JSON e o valor é um Supplier que gera o valor.
-- Retorno: List<String> — lista de JSONs gerados.
+Generates a list of JSONs based on the provided fields and data suppliers (Supplier<Object>). When creating the Map field, remember that FakeRequisitions already extends the Faker library, so just include the function () -> array along with the Faker method.
+- Parameters:
+- quantity: number of JSONs to be generated.
+- fields: map of fields for data providers. Each key is the name of the JSON field, and the value is a Supplier that generates the value.
+- Returns: List<String> — list of generated JSONs.
 
-Exemplo de uso:
-
+Usage example:
 
 ```java
 Map<String, Supplier<Object>> fields = new HashMap<>();
 fields.put("nome", () -> faker.name().fullName());
-        fields.put("email", () -> faker.internet().emailAddress());
+fields.put("email", () -> faker.internet().emailAddress());
 
 List<String> jsons = fakeRequisitions.generateJsons(5, fields);
 ```
 
 ### 2. sendRequisition
-**Assinatura:** `sendRequisition(List<String> jsons)`
+**Signature:** `sendRequisition(List<String> jsons)`
 
-Envia uma lista de JSONs para o endpoint configurado no application.properties.
-- Parâmetros:
-  - jsons: lista de JSONs que serão enviados via HTTP POST.
-- Comportamento:
-  - Define o Content-Type como application/json.
-  - Envia cada JSON usando RestTemplate.
-  - Imprime no console o status da requisição e a resposta do servidor.
-  
- Exemplo de uso:
+Sends a list of JSONs to the endpoint configured in application.properties.
+- Parameters:
+- jsons: List of JSONs to be sent via HTTP POST.
+- Behavior:
+- Sets the Content-Type to application/json.
+- Sends each JSON using RestTemplate.
+- Prints the request status and server response to the console.
+
+Usage example:
 
 ```java
 fakeRequisitions.sendRequisition(jsons);
 ```
 
-### Contribua com o Projeto
+### Contribute to the Project
 
-Sinta-se à vontade para abrir issues e pull requests:
-1. Fork o repositório.
-2. Crie uma branch para sua feature (git checkout -b minha-feature).
-3. Commit suas alterações (git commit -m 'Adiciona minha feature').
-4. Push para a branch (git push origin minha-feature).
-5. Abra um Pull Request.
+Feel free to open issues and pull requests:
+1. Fork the repository.
+2. Create a branch for your feature (git checkout -b my-feature).
+3. Commit your changes (git commit -m 'Add my feature').
+4. Push to the branch (git push origin minha-feature).
+5. Open a Pull Request.
 
-### Licença
+### License
 
 [MIT](LICENSE) © JoaoFXs
