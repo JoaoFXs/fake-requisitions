@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+
+  client-scheduling-db:
+    image: postgres:latest
+    container_name: client-scheduling-db
+    environment:
+      - POSTGRES_DB=client-scheduling-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
