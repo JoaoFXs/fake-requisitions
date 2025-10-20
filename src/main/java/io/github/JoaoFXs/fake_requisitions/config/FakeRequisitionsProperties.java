@@ -9,13 +9,20 @@ import org.springframework.stereotype.Component;
 
 import java.util.Locale;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Component
 @ConfigurationProperties(prefix = "fake.requisitions")
 public class FakeRequisitionsProperties {
 
     private String url;
     private Locale locale;
+    public String getUrl() { return url; }
+    public void setUrl(String url) { this.url = url; }
 
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
 }
