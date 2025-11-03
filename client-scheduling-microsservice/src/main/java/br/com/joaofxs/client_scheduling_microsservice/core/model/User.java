@@ -23,6 +23,10 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
+    @Column(unique = true, nullable = false, updatable = false)
+    private UUID publicId;
+
     private String username;
     private String email;
     private String password;
@@ -37,6 +41,9 @@ public class User implements UserDetails {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+        if(publicId == null) {
+            publicId = UUID.randomUUID();
+        }
     }
 
     @Override

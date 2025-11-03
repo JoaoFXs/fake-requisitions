@@ -14,9 +14,8 @@ import java.net.http.HttpResponse;
 public class CoreExceptionHandler {
 
 
-    @ExceptionHandler({UserNotFoundException.class, UsernameNotFoundException.class})
+    @ExceptionHandler({UsernameNotFoundException.class})
     public ResponseEntity<?> handleUserNotFoundException(RuntimeException ex){
-
         ResponseException response = new ResponseException(HttpStatus.NOT_FOUND.name(),HttpStatus.NOT_FOUND.value(),ex.getMessage());
         return new ResponseEntity<>(
                 response,
@@ -24,6 +23,13 @@ public class CoreExceptionHandler {
 
     }
 
-
+    @ExceptionHandler({UserAlreadyExistException.class})
+        public ResponseEntity<?> handleUserAlreadyExists(UserAlreadyExistException ex){
+        ResponseException response = new ResponseException(HttpStatus.CONFLICT.name(),HttpStatus.CONFLICT.value(),ex.getMessage());
+        return new ResponseEntity<>(
+                response,
+                HttpStatus.CONFLICT
+        );
+    }
 
 }

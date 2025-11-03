@@ -3,23 +3,21 @@ package br.com.joaofxs.client_scheduling_microsservice.core.controller;
 
 import br.com.joaofxs.client_scheduling_microsservice.core.dto.AccessToken;
 import br.com.joaofxs.client_scheduling_microsservice.core.dto.AuthRequest;
-import br.com.joaofxs.client_scheduling_microsservice.core.dto.AuthResponse;
+
 import br.com.joaofxs.client_scheduling_microsservice.core.model.User;
-import br.com.joaofxs.client_scheduling_microsservice.core.repository.UserRepository;
+
 import br.com.joaofxs.client_scheduling_microsservice.core.service.AuthenticationService;
-import br.com.joaofxs.client_scheduling_microsservice.core.service.JwtService;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api")
 public class AuthenticationController {
 
     private final AuthenticationService service;
@@ -28,12 +26,17 @@ public class AuthenticationController {
         this.service = service;
     }
 
-    @PostMapping("/register")
+    @PostMapping("/auth/register")
     public ResponseEntity<AccessToken> register(@RequestBody User request) {
-        return ResponseEntity.ok(service.register(request));
+        return new ResponseEntity<>(service.register(request, "user"), HttpStatus.CREATED);
     }
 
-    @PostMapping("/login")
+    @PostMapping("/admin")
+    public ResponseEntity<AccessToken> registerAdmin(@RequestBody User request) {
+        return new ResponseEntity<>(service.register(request, "admin"), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/auth/login")
     public ResponseEntity<AccessToken> login(@RequestBody AuthRequest request) {
         return ResponseEntity.ok(service.authenticate(request));
     }
